@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StylesXL">
+
+    <!-- Merges the specified dictionaries containing custom control styles into Themes\Generic.xaml -->
+    <ResourceDictionary.MergedDictionaries>
+        <!-- MERGE THE RESOURCES FOLDER FILES -->
+        <ResourceDictionary Source="pack://application:,,,/StylesXL;Component/Resources/Colors.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/StylesXL;Component/Resources/Fonts.xaml"/>
+
+        <!-- MERGE THE DEFAULT SKIN -->
+        <ResourceDictionary Source="pack://application:,,,/StylesXL;Component/Resources/Style/Default.xaml"/>
+
+        <!-- MERGE THE DEFAULT APPEARANCE -->
+        <ResourceDictionary Source="pack://application:,,,/StylesXL;Component/Resources/Appearance/Default.xaml"/>
+        
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
