@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media;
 using ToolsXL.Config;
 
@@ -11,7 +12,7 @@ namespace StylesXL
     /// <summary>
     /// Manages the appearance of the custom controls at runtime.
     /// </summary>
-    public static class StyleManager
+    public class StyleManager : MarkupExtension
     {
         #region Constants
 
@@ -77,9 +78,15 @@ namespace StylesXL
         /// <summary>
         /// Static constructor called before the instance of <see cref="StyleManager"/> is created.
         /// </summary>
-        static StyleManager() 
+        static StyleManager()
         {
-            Config<StyleConfig>.Print();
+            if (!_IsInDesignMode)
+                Config<StyleConfig>.Print();
+        }
+
+        public StyleManager()
+        {
+
         }
 
         #endregion
@@ -119,6 +126,14 @@ namespace StylesXL
             }
         }
 
+        /// <summary>
+        /// Gets wheter the application is in designmode.
+        /// </summary>
+        private static bool _IsInDesignMode
+        {
+            get { return DesignerProperties.GetIsInDesignMode(new DependencyObject()); }
+        }
+
         #endregion
 
         #region Methods
@@ -128,7 +143,7 @@ namespace StylesXL
         /// </summary>
         /// <param name="ID">A <see cref="string"/> specifying the component resource key ID.</param>
         /// <returns>A <see cref="object"/> containing the requested component's value.</returns>
-        internal static object GetStyleValue(string ID)
+        public static object GetStyleValue(string ID)
         {
             return Application.Current.FindResource(new ComponentResourceKey(typeof(Styles), ID));
         }
@@ -140,17 +155,20 @@ namespace StylesXL
         /// <returns></returns>
         public static Brush Brush(string ID)
         {
-            // Check if user color is saved in config
-            string configColor = Config<StyleConfig>.GetProperty(ID);
-
-            if(configColor != null && configColor != string.Empty)
+            if (!_IsInDesignMode)
             {
-                if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
-                {
-                    Color color = (Color)ColorConverter.ConvertFromString(configColor);
+                // Check if user color is saved in config
+                string configColor = Config<StyleConfig>.GetProperty(ID);
 
-                    // Return user brush
-                    return new SolidColorBrush(color);
+                if (configColor != null && configColor != string.Empty)
+                {
+                    if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
+                    {
+                        Color color = (Color)ColorConverter.ConvertFromString(configColor);
+
+                        // Return user brush
+                        return new SolidColorBrush(color);
+                    }
                 }
             }
 
@@ -164,17 +182,20 @@ namespace StylesXL
         /// <returns></returns>
         public static Color GetColor(string ID)
         {
-            // Check if user color is saved in config
-            string configColor = Config<StyleConfig>.GetProperty(ID);
-
-            if (configColor != null && configColor != string.Empty)
+            if (!_IsInDesignMode)
             {
-                if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
-                {
-                    Color color = (Color)ColorConverter.ConvertFromString(configColor);
+                // Check if user color is saved in config
+                string configColor = Config<StyleConfig>.GetProperty(ID);
 
-                    // Return user color
-                    return color;
+                if (configColor != null && configColor != string.Empty)
+                {
+                    if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
+                    {
+                        Color color = (Color)ColorConverter.ConvertFromString(configColor);
+
+                        // Return user color
+                        return color;
+                    }
                 }
             }
 
@@ -188,11 +209,14 @@ namespace StylesXL
         /// <param name="color">The color to set.</param>
         public static void SetColor(string ID, Color color)
         {
-            Config<StyleConfig>.SetProperty(ID, color.ToString());
-
-            if(StyleChanged !=  null)
+            if (!_IsInDesignMode)
             {
-                StyleChanged(null, EventArgs.Empty);
+                Config<StyleConfig>.SetProperty(ID, color.ToString());
+
+                if (StyleChanged != null)
+                {
+                    StyleChanged(null, EventArgs.Empty);
+                }
             }
         }
 
@@ -202,11 +226,14 @@ namespace StylesXL
         /// <param name="ID">A constant string defined in the <see cref="Styles"/> class specifying the color to override.</param>
         public static void ClearColor(string ID)
         {
-            Config<StyleConfig>.SetProperty(ID, null);
-
-            if (StyleChanged != null)
+            if (!_IsInDesignMode)
             {
-                StyleChanged(null, EventArgs.Empty);
+                Config<StyleConfig>.SetProperty(ID, null);
+
+                if (StyleChanged != null)
+                {
+                    StyleChanged(null, EventArgs.Empty);
+                }
             }
         }
 
@@ -293,6 +320,13 @@ namespace StylesXL
                 // Toggle default off
                 _Appearance ^= ControlAppearance.Default;
             }
+        }
+
+        public string Key { get; set; }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return GetStyleValue(Key);
         }
 
         #endregion

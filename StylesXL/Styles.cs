@@ -44,17 +44,26 @@ namespace StylesXL
 
     public static class Layout
     {
-        internal const string BorderThickness = "BorderThickness";
-        internal const string Margin = "Margin";
+        public const string BorderThickness = "BorderThickness";
+        public const string Margin = "Margin";
     }
 
     public static class Brushes
     {
         public const string TestBrush = "TestBrush";
 
+        public const string App = "AppBrush";
+        public const string AppAccent = "AppAccentBrush";
+        public const string AppWorkspace = "AppWorkspaceBrush";
+
         public const string Control = "ControlBrush";
+        public const string ControlHighlight = "ControlHighlightBrush";
         public const string ControlSelected = "ControlSelectedBrush";
         public const string ControlDisabled = "ControlDisabledBrush";
         public const string ControlBorder = "ControlBorderBrush";
+
+        public const string Text = "TextBrush";
+        public const string TextDisabled = "TextDisabledBrush";
+        public const string TextSelected = "TextSelectedBrush";
     }
 }
