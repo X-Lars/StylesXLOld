@@ -9,7 +9,7 @@
 
     </ResourceDictionary.MergedDictionaries>
 
-    <SolidColorBrush x:Key="TestBrush" Color="DeepPink"/>
+    <SolidColorBrush x:Key="{ComponentResourceKey xl:Styles, TestBrush}" Color="DarkMagenta"/>
 
     <SolidColorBrush x:Key="{ComponentResourceKey xl:Styles, ControlBrush}" Color="{StaticResource WindowsSystemControlDark}" />
     <SolidColorBrush x:Key="{ComponentResourceKey xl:Styles, ControlBorderBrush}" Color="{StaticResource WindowsSystemControlDarkDarkColor}" />

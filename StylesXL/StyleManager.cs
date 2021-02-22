@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
+using ToolsXL.Config;
 
 namespace StylesXL
 {
@@ -74,7 +77,10 @@ namespace StylesXL
         /// <summary>
         /// Static constructor called before the instance of <see cref="StyleManager"/> is created.
         /// </summary>
-        static StyleManager() { }
+        static StyleManager() 
+        {
+            Config<StyleConfig>.Print();
+        }
 
         #endregion
 
@@ -128,6 +134,83 @@ namespace StylesXL
         }
 
         /// <summary>
+        /// Gets the specified brush from the current application runtime resources.
+        /// </summary>
+        /// <param name="ID">A constant string defined in the <see cref="Styles"/> class specifying the brush to get.</param>
+        /// <returns></returns>
+        public static Brush Brush(string ID)
+        {
+            // Check if user color is saved in config
+            string configColor = Config<StyleConfig>.GetProperty(ID);
+
+            if(configColor != null && configColor != string.Empty)
+            {
+                if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
+                {
+                    Color color = (Color)ColorConverter.ConvertFromString(configColor);
+
+                    // Return user brush
+                    return new SolidColorBrush(color);
+                }
+            }
+
+            return (Brush)Application.Current.FindResource(new ComponentResourceKey(typeof(Styles), ID));
+        }
+
+        /// <summary>
+        /// Gets the specified color from the current application runtime resources.
+        /// </summary>
+        /// <param name="ID">A constant string defined in the <see cref="Styles"/> class specifying the color to get.</param>
+        /// <returns></returns>
+        public static Color GetColor(string ID)
+        {
+            // Check if user color is saved in config
+            string configColor = Config<StyleConfig>.GetProperty(ID);
+
+            if (configColor != null && configColor != string.Empty)
+            {
+                if (TypeDescriptor.GetConverter(typeof(Color)).IsValid(configColor))
+                {
+                    Color color = (Color)ColorConverter.ConvertFromString(configColor);
+
+                    // Return user color
+                    return color;
+                }
+            }
+
+            return (Color)Application.Current.FindResource(new ComponentResourceKey(typeof(Styles), ID));
+        }
+
+        /// <summary>
+        /// Sets the specified color to override the style manager defaults.
+        /// </summary>
+        /// <param name="ID">A constant string defined in the <see cref="Styles"/> class specifying the color to override.</param>
+        /// <param name="color">The color to set.</param>
+        public static void SetColor(string ID, Color color)
+        {
+            Config<StyleConfig>.SetProperty(ID, color.ToString());
+
+            if(StyleChanged !=  null)
+            {
+                StyleChanged(null, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Clears the specified color override.
+        /// </summary>
+        /// <param name="ID">A constant string defined in the <see cref="Styles"/> class specifying the color to override.</param>
+        public static void ClearColor(string ID)
+        {
+            Config<StyleConfig>.SetProperty(ID, null);
+
+            if (StyleChanged != null)
+            {
+                StyleChanged(null, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Applies the currently selected skin.
         /// </summary>
         private static void ApplySkinStyle()
@@ -140,7 +223,7 @@ namespace StylesXL
 
             dictionaries.Add(_CurrentStyle);
 
-            // Raise the skin changed event
+            // Raise the style changed event
             if (StyleChanged != null)
             {
                 StyleChanged(null, EventArgs.Empty);

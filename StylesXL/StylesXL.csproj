@@ -43,6 +43,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="ToolsXL">
+      <HintPath>..\..\..\Visual Studio\ToolsXL\ToolsXL\bin\Release\ToolsXL.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -50,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Extensions\BrushExtensions.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="StyleConfig.cs" />
     <Compile Include="Styles.cs" />
     <Page Include="Resources\Appearances.xaml">
       <SubType>Designer</SubType>

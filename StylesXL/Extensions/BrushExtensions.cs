@@ -50,5 +50,12 @@ namespace StylesXL.Extensions
 
             return new SolidColorBrush(color);
         }
+
+        public static double GetBrightness(this Brush instance)
+        {
+            SolidColorBrush brush = (SolidColorBrush)instance;
+
+            return brush.Color.Brightness();
+        }
     }
 }

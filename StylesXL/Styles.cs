@@ -39,7 +39,22 @@ namespace StylesXL
     /// <remarks><i>The defined constants are used for calculation of dynamic appearance properties that influence layout.</i></remarks>
     public static class Styles
     {
+        
+    }
+
+    public static class Layout
+    {
         internal const string BorderThickness = "BorderThickness";
         internal const string Margin = "Margin";
+    }
+
+    public static class Brushes
+    {
+        public const string TestBrush = "TestBrush";
+
+        public const string Control = "ControlBrush";
+        public const string ControlSelected = "ControlSelectedBrush";
+        public const string ControlDisabled = "ControlDisabledBrush";
+        public const string ControlBorder = "ControlBorderBrush";
     }
 }
